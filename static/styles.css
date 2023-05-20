@@ -1,0 +1,157 @@
+<style>
+    html {
+      background: black;
+      background-color: black;
+    }
+
+    body {
+        font-family: Tahoma, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: black;
+        color: gold;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: black;
+
+    }
+
+    header {
+      background-color: black;
+      color: gold;
+    }
+
+    h1, h2, h3 {
+      background-color: black;
+      font-family: verdana, sans-serif;
+      color: gold;
+
+    }
+
+    p {
+      background-color: black;
+      color: gold;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ccc;
+        color: gold;
+        background-color: black;
+    }
+
+    th {
+        background-color: #black;
+    }
+
+    button {
+        background-color: gold;
+        border: none;
+        color: black;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        transition-duration: 0.4s;
+    }
+
+    button:hover {
+        background-color: #ffb400;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+        width: 100%;
+        padding: 8px 16px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        background-color: black;
+        color: gold;
+    }
+
+    a {
+        color: red;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    label {
+        display: block;
+        margin-top: 16px;
+        color: gold;
+    }
+
+    form {
+      background-color: black
+    }
+
+    .logo {
+  width: 100px;
+  height: 100px;
+}
+
+.user-balances-table {
+  border-collapse: separate;
+  border-spacing: 0px 10px;
+  border: 2px solid gold;
+  box-shadow: 0px 0px 20px gold;
+  transform-style: preserve-3d;
+}
+
+.user-balances-table th,
+.user-balances-table td {
+  padding: 12px;
+  color: gold;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.user-balances-table th {
+  background-color: #1d1d1d;
+  color: gold;
+  text-transform: uppercase;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.user-balances-table tr:not(:first-child):hover {
+  box-shadow: 0px 0px 20px gold;
+  transform: translateZ(10px) rotateX(15deg) scale(1.05);
+  transition: all 0.5s ease-in-out;
+}
+
+.user-balances-table tr:last-child td {
+  border-radius: 0px 0px 5px 5px;
+}
+
+.user-balances-table tbody tr:hover td {
+  background-color: #2d2d2d;
+  box-shadow: none;
+  transform: none;
+}
+
+.user-balances-table th:hover {
+  transform: none;
+}
+
+.devnotes {
+  font-family: Courier, monospace;
+  color: cyan !important
+}
+
+</style>
+

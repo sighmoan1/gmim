@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}
+GMIM
+{% endblock %}
+
+{% block content %}
+    <h1>GMIM</h1>
+    <p>Welcome, {{ session['username'] }}! Your role: {{ users[session['username']]['role'] }}</p>
+        {% if users[session['username']]['role'] == 'CEO' %}
+        <h1>User management</h1>
+        <p>We know you're very busy, but you can manage users from here. Exclusive to you.</p>
+        <h2>Add User</h2>
+        <form action="/add-user" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <button type="submit">Add User</button>
+        </form>
+
+        <h2>Remove User</h2>
+        <form action="/remove-user" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <button type="submit">Remove User</button>
+        </form>
+    {% endif %}
+
+    {% if users[session['username']]['role'] == 'CEO' %}
+            <h2>Assign Role</h2>
+            <form action="/assign-role" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <label for="role">Role:</label>
+                <select id="role" name="role" required>
+                    <option value="Representative">Representative</option>
+                    <option value="Loyal Supporter">Loyal Supporter</option>
+                </select>
+                <button type="submit">Assign Role</button>
+            </form>
+        {% endif %}
+
+    {% if users[session['username']]['role'] == 'CEO' %}
+        <h2>Edit User GMIMcoin Balance</h2>
+        <form action="/edit-balance" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="new_balance">New GMIMcoin Balance:</label>
+            <input type="number" id="new_balance" name="new_balance" min="0" required>
+            <button type="submit">Edit Balance</button>
+        </form>
+    {% endif %}
+
+    {% if can_generate %}
+        <h1>GMIM Coin Generator</h1>
+        <p>The CEO and Representatives can create GMIMCoin</p>
+        <h2>Generate GMIMCoin</h2>
+        <p>When you provide this function with a number it generates a link for attributing that many GMIMCoin to a user. When the coins are attributed, the link stops working to prevent double spend</p>
+        <form action="/generate" method="POST">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" min="1" required>
+            <button type="submit">Generate GMIMcoin</button>
+        </form>
+
+        <h2>GMIMcoin URLs</h2>
+        <p>This creates the single use URLs</p>
+        <table>
+            <tr>
+                <th>Amount</th>
+                <th>URL</th>
+                <th>QR Code</th>
+            </tr>
+            {% for token, amount in gmimcoin_pool.items() %}
+            <tr>
+                <td>{{ amount }}</td>
+                <td><a href="{{ url_for('attribute', token=token) }}">{{ token }}</a></td>
+                <td><img src="data:image/png;base64,{{ gmimcoin_pool_qrcodes[token] }}" alt="QR Code"></td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+    <h2>User Balances</h2>
+    <p>This lists users and their balances</p>
+    <table class="user-balances-table">
+        <tr>
+            <th>Username</th>
+            <th>GMIMcoin Balance</th>
+            <th>Role</th>
+        </tr>
+        {% for user, data in sorted_users %}
+        <tr>
+            <td>{{ user }}</td>
+            <td>{{ data['balance'] }}</td>
+            <td>{{ data['role'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+
+
+
+    <form action="{{ url_for('logout') }}">
+    <button type="submit">Logout</button>
+    </form>
+{% endblock %}
+

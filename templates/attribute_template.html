@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Attribute GMIMcoin
+{% endblock %}
+
+{% block content %}
+    <h1>Attribute {{ amount }} GMIMCoin</h1>
+    {% if logged_in %}
+        <form action="/attribute/{{ token }}" method="POST">
+            <label for="username">Username:</label>
+            <p>{{ username }}</p>
+            <input type="hidden" name="username" value="{{ username }}">
+            <button type="submit">Attribute GMIMcoin</button>
+        </form>
+    {% else %}
+        <h2>Login to claim GMIMcoin</h2>
+        <form action="{{ url_for('attribute', token=token) }}" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <button type="submit">Login</button>
+        </form>
+    {% endif %}
+    <p><a href="{{ url_for('logout') }}">Logout</a></p>
+    <p><a href="{{ url_for('login') }}">Login</a></p>
+{% endblock %}
+
