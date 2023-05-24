@@ -49,6 +49,11 @@ GMIM
             <button type="submit">Edit Balance</button>
         </form>
     {% endif %}
+    {% if session['username'] %}
+    <div> 
+        <img src="data:image/png;base64,{{ users[session['username']]['qr_code'] }}" alt="Your QR code">
+    </div>
+    {% endif %}
 
     {% if can_generate %}
         <h1>GMIM Coin Generator</h1>
@@ -78,7 +83,7 @@ GMIM
             {% endfor %}
         </table>
     {% endif %}
-
+<!-- 
     <h2>User Balances</h2>
     <p>This lists users and their balances</p>
     <table class="user-balances-table">
@@ -95,9 +100,6 @@ GMIM
         </tr>
         {% endfor %}
     </table>
-
-
-
 
     <form action="{{ url_for('logout') }}">
     <button type="submit">Logout</button>
