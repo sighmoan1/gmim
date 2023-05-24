@@ -39,15 +39,26 @@ GMIM
             </form>
         {% endif %}
 
-    {% if users[session['username']]['role'] == 'CEO' %}
+        {% if users[session['username']]['role'] == 'CEO' %}
         <h2>Edit User GMIMcoin Balance</h2>
         <form action="/edit-balance" method="POST">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
             <label for="new_balance">New GMIMcoin Balance:</label>
             <input type="number" id="new_balance" name="new_balance" min="0" required>
-            <button type="submit">Edit Balance</button>
+            <label for="operation_type">Operation Type:</label>
+            <select id="operation_type" name="operation_type">
+                <option value="add">Add to Balance</option>
+                <option value="edit">Set Balance</option>
+            </select>
+            <button type="submit">Submit</button>
         </form>
+    {% endif %}
+    {% if session['username'] %}
+    
+    <div> 
+        <img src="data:image/png;base64,{{ users[session['username']]['qr_code'] }}" alt="Your QR code">
+    </div>
     {% endif %}
 
     {% if can_generate %}
@@ -79,28 +90,26 @@ GMIM
         </table>
     {% endif %}
 
-    <h2>User Balances</h2>
-    <p>This lists users and their balances</p>
-    <table class="user-balances-table">
-        <tr>
-            <th>Username</th>
-            <th>GMIMcoin Balance</th>
-            <th>Role</th>
-        </tr>
-        {% for user, data in sorted_users %}
-        <tr>
-            <td>{{ user }}</td>
-            <td>{{ data['balance'] }}</td>
-            <td>{{ data['role'] }}</td>
-        </tr>
-        {% endfor %}
-    </table>
 
-
-
+    <h1>GMIMCoin Progress Board</h1>
+<p></p><a href="https://www.instagram.com/g.m.i.manchester/">@g.m.i.manchester</a></p>
+<div id="balances" hx-get="/update_balances" hx-trigger="every 1s">
+  <table class="user-balances-table">
+    <tr>
+        <th>Loyal Member</th>
+        <th>GMIMcoin</th>
+    </tr>
+    {% for user, data in sorted_users %}
+    <tr data-id="{{ user }}" data-balance="{{ data['balance'] }}">
+        <td>{{ user }}</td>
+        <td class="balance">{{ data['balance'] }}</td>
+    {% endfor %}
+  </table>
+</div>
 
     <form action="{{ url_for('logout') }}">
     <button type="submit">Logout</button>
     </form>
+
 {% endblock %}
 

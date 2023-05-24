@@ -47,7 +47,7 @@
     }
 
     th {
-        background-color: #black;
+        background-color: black;
     }
 
     button {
@@ -70,6 +70,18 @@
 
     input[type="text"],
     input[type="number"],
+    select {
+        width: 100%;
+        padding: 8px 16px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        background-color: black;
+        color: gold;
+    }
+
+    input[type="email"],
     select {
         width: 100%;
         padding: 8px 16px;
@@ -152,6 +164,8 @@
   font-family: Courier, monospace;
   color: cyan !important
 }
+
+
 
 </style>
 
