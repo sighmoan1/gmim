@@ -186,16 +186,38 @@ def login():
     return render_template('login_template.html', sorted_users=sorted_users, gmimcoin_pool=gmimcoin_pool, gmimcoin_pool_qrcodes=gmimcoin_pool_qrcodes)
 
 # Define the route for the homepage
-@app.route('/', methods=['GET'])
+@app.route('/dmtx', methods=['GET'])
+# Define the route for the homepage
+@app.route('/dmtx', methods=['GET'])
 def index():
     if 'username' not in session:
         return redirect(url_for('login'))
+
+    if 'entered_word' not in session:
+        return redirect(url_for('verify_word'))
+
+    entered_word = session['entered_word']
+    if entered_word.lower() != 'praisebob':
+        return redirect(url_for('verify_word'))
 
     user_role = users[session['username']]['role']
     can_generate = user_role in ['Representative','CEO']
     sorted_users = sorted(users.items(), key=lambda x: x[1]['balance'], reverse=True)
 
     return render_template('index_template.html', gmimcoin_pool=gmimcoin_pool, users=users, sorted_users=sorted_users, can_generate=can_generate, gmimcoin_pool_qrcodes=gmimcoin_pool_qrcodes)
+
+# Define the route for verifying the word
+@app.route('/verify_word', methods=['GET', 'POST'])
+def verify_word():
+    if request.method == 'POST':
+        entered_word = request.form['word']
+        if entered_word.lower() == 'praisebob':
+            session['entered_word'] = entered_word
+            return redirect(url_for('index'))
+        else:
+            return "Incorrect word. Please try again."
+    
+    return render_template('verify_word_template.html')
 
 # Define the route for attributing GMIMcoins to a user
 @app.route('/attribute/<token>', methods=['GET', 'POST'])
@@ -303,7 +325,7 @@ def edit_balance():
         return "Username not found.", 400
 
 # Define the route for viewing all users
-@app.route('/progress', methods=['GET'])
+@app.route('/', methods=['GET'])
 def users_page():
     sorted_users = sorted(users.items(), key=lambda x: x[1]['balance'], reverse=True)
 
