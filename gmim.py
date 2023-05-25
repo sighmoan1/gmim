@@ -185,8 +185,7 @@ def login():
     sorted_users = sorted(users.items(), key=lambda x: x[1]['balance'], reverse=True)
     return render_template('login_template.html', sorted_users=sorted_users, gmimcoin_pool=gmimcoin_pool, gmimcoin_pool_qrcodes=gmimcoin_pool_qrcodes)
 
-# Define the route for the homepage
-@app.route('/dmtx', methods=['GET'])
+
 # Define the route for the homepage
 @app.route('/dmtx', methods=['GET'])
 def index():
@@ -325,7 +324,7 @@ def edit_balance():
         return "Username not found.", 400
 
 # Define the route for viewing all users
-@app.route('/dmtx', methods=['GET'])
+@app.route('/', methods=['GET'])
 def users_page():
     sorted_users = sorted(users.items(), key=lambda x: x[1]['balance'], reverse=True)
 
