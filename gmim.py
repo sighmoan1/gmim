@@ -140,7 +140,7 @@ def register():
         if username not in users:
             users[username] = {'balance': 0, 'role': 'Loyal Supporter'}
             session['username'] = username
-            return redirect('/')
+            return redirect('/dmtx')
         else:
             return "Username already exists. Please choose another.", 400
 
@@ -161,7 +161,7 @@ def assign_role():
 
     if target_username in users:
         users[target_username]['role'] = new_role
-        return redirect('/')
+        return redirect('/dmtx')
     else:
         return "Username not found. Please register first.", 400
 
@@ -178,7 +178,7 @@ def login():
             session['username'] = username
             qr_data = username
             users[username]['qr_code'] = generate_user_qrcode_base64(qr_data, username) 
-            return redirect('/')
+            return redirect('/dmtx')
         else:
             return "Username not found. Please register first.", 400
 
@@ -233,7 +233,7 @@ def attribute(token):
         if 'username' in session:
             users[username]['balance'] += amount
             del gmimcoin_pool[token]
-            return redirect('/')
+            return redirect('/dmtx')
         else:
             if username in users:
                 session['username'] = username
@@ -257,7 +257,7 @@ def generate():
     gmimcoin_pool[token] = amount
     gmimcoin_pool_qrcodes[token] = generate_qrcode_base64(url_for('attribute', token=token, _external=True), amount)
 
-    return redirect('/')
+    return redirect('/dmtx')
 
 # Define the route for logging out
 @app.route('/logout', methods=['GET'])
@@ -282,7 +282,7 @@ def add_user():
 
     if username not in users:
         users[username] = {'balance': 0, 'role': 'Loyal Supporter'}
-        return redirect('/')
+        return redirect('/dmtx')
     else:
         return "Username already exists. Please choose another.", 400
 
@@ -298,7 +298,7 @@ def remove_user():
         if username == session['username']:
             return "You cannot remove yourself.", 400
         del users[username]
-        return redirect('/')
+        return redirect('/dmtx')
     else:
         return "Username not found.", 400
 
@@ -320,12 +320,12 @@ def edit_balance():
         elif operation_type == 'edit':
             # Set balance to new balance
             users[target_username]['balance'] = new_balance
-        return redirect('/')
+        return redirect('/dmtx')
     else:
         return "Username not found.", 400
 
 # Define the route for viewing all users
-@app.route('/', methods=['GET'])
+@app.route('/dmtx', methods=['GET'])
 def users_page():
     sorted_users = sorted(users.items(), key=lambda x: x[1]['balance'], reverse=True)
 
