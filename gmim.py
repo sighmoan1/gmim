@@ -37,7 +37,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     balance = db.Column(db.Integer, default=0, nullable=False)
-    role = db.Column(db.String(50), default='Loyal Supporter', nullable=False)
+    role = db.Column(db.String(50), default='Loyal Member', nullable=False)
     qr_code = db.Column(db.Text, nullable=True)  # Store base64-encoded QR code
 
     def __repr__(self):
@@ -76,7 +76,7 @@ def generate_qrcode_base64(qr_data, text=None, is_user=False, username=None):
     if os.path.exists(logo_path):
         logo = Image.open(logo_path).convert("RGBA")
         qr_box = img.size[0]
-        logo_size = int(qr_box * 0.1)
+        logo_size = int(qr_box * 0.2)
         logo = logo.resize((logo_size, logo_size), Image.LANCZOS)
         logo_pos = ((qr_box - logo_size) // 2, (qr_box - logo_size) // 2)
         img.paste(logo, logo_pos, logo)
@@ -158,7 +158,7 @@ def register():
         new_user = User(
             username=username,
             balance=0,
-            role='Loyal Supporter'
+            role='Loyal Member'
         )
         db.session.add(new_user)
         db.session.commit()
@@ -367,7 +367,7 @@ def assign_role():
         flash("Username not found. Please register first.", "error")
         return redirect(url_for('index'))
     
-    if new_role not in ['Representative', 'Loyal Supporter']:
+    if new_role not in ['Representative', 'Loyal Member']:
         flash("Invalid role selected.", "error")
         return redirect(url_for('index'))
     
@@ -403,7 +403,7 @@ def add_user():
     new_user = User(
         username=username,
         balance=0,
-        role='Loyal Supporter'
+        role='Loyal Member'
     )
     db.session.add(new_user)
     db.session.commit()
