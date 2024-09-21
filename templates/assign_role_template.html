@@ -1,21 +1,25 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block title %} Assign Role - GMIMCoin {% endblock
+%} {% block content %}
+<h1>Assign Role</h1>
+<form action="{{ url_for('assign_role') }}" method="POST">
+  <label for="username">Username:</label>
+  <input
+    type="text"
+    id="username"
+    name="username"
+    required
+    maxlength="150"
+    placeholder="Enter username"
+  />
 
-{% block title %}
-Assign
+  <label for="role">Role:</label>
+  <select id="role" name="role" required>
+    <option value="" disabled selected>Select role</option>
+    <option value="Representative">Representative</option>
+    <option value="Loyal Supporter">Loyal Supporter</option>
+  </select>
+
+  <button type="submit">Assign Role</button>
+</form>
+<p><a href="{{ url_for('index') }}">Back to Dashboard</a></p>
 {% endblock %}
-
-{% block content %}
-    <h1>Assign Role</h1>
-    <form action="/assign-role" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <label for="role">Role:</label>
-        <select id="role" name="role" required>
-            <option value="Representative">Representative</option>
-            <option value="Loyal Supporter">Loyal Supporter</option>
-        </select>
-        <button type="submit">Assign Role</button>
-    </form>
-    <p><a href="{{ url_for('logout') }}">Logout</a></p>
-{% endblock %}
-

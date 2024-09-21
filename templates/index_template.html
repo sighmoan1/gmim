@@ -1,115 +1,182 @@
-{% extends 'base.html' %}
-
-{% block title %}
-GMIM
-{% endblock %}
-
+{% extends 'base.html' %} {% block title %} Dashboard - GMIMCoin {% endblock %}
 {% block content %}
-    <h1>GMIM</h1>
-    <p>Welcome, {{ session['username'] }}! Your role: {{ users[session['username']]['role'] }}</p>
-        {% if users[session['username']]['role'] == 'CEO' %}
-        <h1>User management</h1>
-        <p>We know you're very busy, but you can manage users from here. Exclusive to you.</p>
-        <h2>Add User</h2>
-        <form action="/add-user" method="POST">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <button type="submit">Add User</button>
-        </form>
+<h1>Welcome, {{ user.username }}!</h1>
+<p>Your Role: <strong>{{ user.role }}</strong></p>
+<p>Your Balance: <strong>{{ user.balance }} GMIMCoin</strong></p>
 
-        <h2>Remove User</h2>
-        <form action="/remove-user" method="POST">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <button type="submit">Remove User</button>
-        </form>
-    {% endif %}
-
-    {% if users[session['username']]['role'] == 'CEO' %}
-            <h2>Assign Role</h2>
-            <form action="/assign-role" method="POST">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-                <label for="role">Role:</label>
-                <select id="role" name="role" required>
-                    <option value="Representative">Representative</option>
-                    <option value="Loyal Supporter">Loyal Supporter</option>
-                </select>
-                <button type="submit">Assign Role</button>
-            </form>
-        {% endif %}
-
-        {% if users[session['username']]['role'] == 'CEO' %}
-        <h2>Edit User GMIMcoin Balance</h2>
-        <form action="/edit-balance" method="POST">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <label for="new_balance">New GMIMcoin Balance:</label>
-            <input type="number" id="new_balance" name="new_balance" min="0" required>
-            <label for="operation_type">Operation Type:</label>
-            <select id="operation_type" name="operation_type">
-                <option value="add">Add to Balance</option>
-                <option value="edit">Set Balance</option>
-            </select>
-            <button type="submit">Submit</button>
-        </form>
-    {% endif %}
-    {% if session['username'] %}
-    
-    <div> 
-        <img src="data:image/png;base64,{{ users[session['username']]['qr_code'] }}" alt="Your QR code">
-    </div>
-    {% endif %}
-
-    {% if can_generate %}
-        <h1>GMIM Coin Generator</h1>
-        <p>The CEO and Representatives can create GMIMCoin</p>
-        <h2>Generate GMIMCoin</h2>
-        <p>When you provide this function with a number it generates a link for attributing that many GMIMCoin to a user. When the coins are attributed, the link stops working to prevent double spend</p>
-        <form action="/generate" method="POST">
-            <label for="amount">Amount:</label>
-            <input type="number" id="amount" name="amount" min="1" required>
-            <button type="submit">Generate GMIMcoin</button>
-        </form>
-
-        <h2>GMIMcoin URLs</h2>
-        <p>This creates the single use URLs</p>
-        <table>
-            <tr>
-                <th>Amount</th>
-                <th>URL</th>
-                <th>QR Code</th>
-            </tr>
-            {% for token, amount in gmimcoin_pool.items() %}
-            <tr>
-                <td>{{ amount }}</td>
-                <td><a href="{{ url_for('attribute', token=token) }}">{{ token }}</a></td>
-                <td><img src="data:image/png;base64,{{ gmimcoin_pool_qrcodes[token] }}" alt="QR Code"></td>
-            </tr>
-            {% endfor %}
-        </table>
-    {% endif %}
-
-
-    <h1>GMIMCoin Progress Board</h1>
-<p></p><a href="https://www.instagram.com/g.m.i.manchester/">@g.m.i.manchester</a></p>
-<div id="balances" hx-get="/update_balances" hx-trigger="every 1s">
-  <table class="user-balances-table">
-    <tr>
-        <th>Loyal Member</th>
-        <th>GMIMcoin</th>
-    </tr>
-    {% for user, data in sorted_users %}
-    <tr data-id="{{ user }}" data-balance="{{ data['balance'] }}">
-        <td>{{ user }}</td>
-        <td class="balance">{{ data['balance'] }}</td>
-    {% endfor %}
-  </table>
+{% if user.qr_code %}
+<div class="qr-code">
+  <h2>Your QR Code</h2>
+  <img src="data:image/png;base64,{{ user.qr_code }}" alt="Your QR Code" />
 </div>
+{% endif %} {% if can_generate %}
+<section class="gmimcoin-generator">
+  <h2>Generate GMIMCoin</h2>
+  <p>You can generate GMIMCoin tokens which can be attributed to users.</p>
+  <form action="{{ url_for('generate') }}" method="POST">
+    <label for="amount">Amount:</label>
+    <input
+      type="number"
+      id="amount"
+      name="amount"
+      min="1"
+      required
+      placeholder="Enter amount"
+    />
+    <button type="submit">Generate GMIMCoin</button>
+  </form>
 
-    <form action="{{ url_for('logout') }}">
-    <button type="submit">Logout</button>
+  <h3>Generated GMIMCoin Tokens</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Amount</th>
+        <th>Token</th>
+        <th>QR Code</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for token in gmimcoin_pool %}
+      <tr>
+        <td>{{ token.amount }}</td>
+        <td>
+          <a href="{{ url_for('attribute', token=token.token) }}"
+            >{{ token.token }}</a
+          >
+        </td>
+        <td>
+          <img
+            src="data:image/png;base64,{{ token.qr_code }}"
+            alt="QR Code for {{ token.amount }} GMIMCoin"
+          />
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %} {% if user.role == 'CEO' %}
+<section class="user-management">
+  <h2>User Management</h2>
+  <p>Manage users and their roles.</p>
+
+  <!-- Add User Form -->
+  <div class="add-user">
+    <h3>Add User</h3>
+    <form action="{{ url_for('add_user') }}" method="POST">
+      <label for="add_username">Username:</label>
+      <input
+        type="text"
+        id="add_username"
+        name="username"
+        required
+        maxlength="150"
+        placeholder="Enter new user's username"
+      />
+      <button type="submit">Add User</button>
     </form>
+  </div>
 
+  <!-- Remove User Form -->
+  <div class="remove-user">
+    <h3>Remove User</h3>
+    <form action="{{ url_for('remove_user') }}" method="POST">
+      <label for="remove_username">Username:</label>
+      <input
+        type="text"
+        id="remove_username"
+        name="username"
+        required
+        maxlength="150"
+        placeholder="Enter username to remove"
+      />
+      <button type="submit">Remove User</button>
+    </form>
+  </div>
+
+  <!-- Assign Role Form -->
+  <div class="assign-role">
+    <h3>Assign Role</h3>
+    <form action="{{ url_for('assign_role') }}" method="POST">
+      <label for="assign_username">Username:</label>
+      <input
+        type="text"
+        id="assign_username"
+        name="username"
+        required
+        maxlength="150"
+        placeholder="Enter username"
+      />
+
+      <label for="role">Role:</label>
+      <select id="role" name="role" required>
+        <option value="" disabled selected>Select role</option>
+        <option value="Representative">Representative</option>
+        <option value="Loyal Supporter">Loyal Supporter</option>
+      </select>
+
+      <button type="submit">Assign Role</button>
+    </form>
+  </div>
+
+  <!-- Edit Balance Form -->
+  <div class="edit-balance">
+    <h3>Edit User Balance</h3>
+    <form action="{{ url_for('edit_balance') }}" method="POST">
+      <label for="edit_username">Username:</label>
+      <input
+        type="text"
+        id="edit_username"
+        name="username"
+        required
+        maxlength="150"
+        placeholder="Enter username"
+      />
+
+      <label for="new_balance">New Balance:</label>
+      <input
+        type="number"
+        id="new_balance"
+        name="new_balance"
+        min="0"
+        required
+        placeholder="Enter new balance"
+      />
+
+      <label for="operation_type">Operation:</label>
+      <select id="operation_type" name="operation_type" required>
+        <option value="edit">Set Balance</option>
+        <option value="add">Add to Balance</option>
+      </select>
+
+      <button type="submit">Update Balance</button>
+    </form>
+  </div>
+</section>
+{% endif %}
+
+<section class="progress-board">
+  <h2>GMIMCoin Progress Board</h2>
+  <p>
+    Follow us on
+    <a
+      href="https://www.instagram.com/g.m.i.manchester/"
+      target="_blank"
+      rel="noopener noreferrer"
+      >@g.m.i.manchester</a
+    >
+  </p>
+  <div
+    id="balances"
+    hx-get="{{ url_for('update_balances') }}"
+    hx-trigger="every 5s"
+    hx-swap="innerHTML"
+  >
+    {% include 'balances_template.html' %}
+  </div>
+</section>
+
+<form action="{{ url_for('logout') }}" method="GET" class="logout-form">
+  <button type="submit">Logout</button>
+</form>
 {% endblock %}
-

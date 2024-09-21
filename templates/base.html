@@ -1,14 +1,46 @@
 <!DOCTYPE html>
-<script src="static/htmx.min.js"></script>
-<html>
-<head>
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <a href="https://linktr.ee/g.m.i.m">
-        <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Logo" class="logo">
-    </a>
-    {% block content %}{% endblock %}
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}GMIMCoin{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <!-- Include HTMX -->
+    <script src="{{ url_for('static', filename='htmx.min.js') }}"></script>
+  </head>
+  <body>
+    <header>
+      <a
+        href="https://linktr.ee/g.m.i.m"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          src="{{ url_for('static', filename='images/logo.jpeg') }}"
+          alt="GMIM Logo"
+          class="logo"
+        />
+      </a>
+    </header>
+
+    <main>
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
+      <!-- Content Block -->
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer></footer>
+  </body>
 </html>

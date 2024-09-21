@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block title %} Add User - GMIMCoin {% endblock %}
+{% block content %}
+<h1>Add New User</h1>
+<form action="{{ url_for('add_user') }}" method="POST">
+  <label for="username">Username:</label>
+  <input
+    type="text"
+    id="username"
+    name="username"
+    required
+    maxlength="150"
+    placeholder="Enter new user's username"
+  />
+  <button type="submit">Add User</button>
+</form>
+<p><a href="{{ url_for('index') }}">Back to Dashboard</a></p>
+{% endblock %}

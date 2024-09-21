@@ -1,53 +1,69 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block title %} Login - GMIMCoin {% endblock %} {%
+block content %}
+<h1>Login</h1>
+<form action="{{ url_for('login') }}" method="POST">
+  <label for="username">Username:</label>
+  <input
+    type="text"
+    id="username"
+    name="username"
+    required
+    maxlength="150"
+    placeholder="Enter your username"
+  />
+  <button type="submit">Login</button>
+</form>
 
-{% block title %}
-Login
+<p>
+  Don't have an account? <a href="{{ url_for('register') }}">Register here</a>.
+</p>
+
+<h2>Leaderboard</h2>
+<table class="user-balances-table">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>GMIMCoin Balance</th>
+      <th>Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in sorted_users %}
+    <tr>
+      <td>{{ user.username }}</td>
+      <td>{{ user.balance }}</td>
+      <td>{{ user.role }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Available GMIMCoin Tokens</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Amount</th>
+      <th>Token</th>
+      <th>QR Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for token in gmimcoin_pool %}
+    <tr>
+      <td>{{ token.amount }}</td>
+      <td>
+        <a href="{{ url_for('attribute', token=token.token) }}"
+          >{{ token.token }}</a
+        >
+      </td>
+      <td>
+        <img
+          src="data:image/png;base64,{{ token.qr_code }}"
+          alt="QR Code for {{ token.amount }} GMIMCoin"
+        />
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
-
-{% block content %}
-    <h1>Login</h1>
-    <form action="/login" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <button type="submit">Login</button>
-    </form>
-
-    <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a>.</p>
-<!-- 
-    <h2>User Balances</h2>
-    <p>This lists users and their balances</p>
-    <table class="user-balances-table">
-        <tr>
-            <th>Username</th>
-            <th>GMIMcoin Balance</th>
-            <th>Role</th>
-        </tr>
-        {% for user, data in sorted_users %}
-        <tr>
-            <td>{{ user }}</td>
-            <td>{{ data['balance'] }}</td>
-            <td>{{ data['role'] }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-
-    <h2>GMIMcoin URLs</h2>
-    <p>This lists GMIMcoin URLs and their associated amounts</p>
-    <p>This is for testing purposes only, these would be given out to users individually normally</p>
-    <table>
-        <tr>
-            <th>Amount</th>
-            <th>URL</th>
-            <th>QR Code</th>
-        </tr>
-        {% for token, amount in gmimcoin_pool.items() %}
-  <tr>
-    <td>{{ amount }}</td>
-    <td><a href="{{ url_for('attribute', token=token) }}">{{ token }}</a></td>
-    <td><img src="data:image/png;base64,{{ gmimcoin_pool_qrcodes[token] }}" alt="QR Code"></td>
-  </tr>
-  {% endfor %}
-    </table>
--->
-{% endblock %}
-

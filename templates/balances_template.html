@@ -1,11 +1,18 @@
 <table class="user-balances-table">
+  <thead>
     <tr>
-        <th>Loyal Member</th>
-        <th>GMIMcoin</th>
+      <th>Username</th>
+      <th>GMIMCoin Balance</th>
+      <th>Role</th>
     </tr>
-    {% for user, data in sorted_users %}
-    <tr data-id="{{ user }}" data-balance="{{ data['balance'] }}">
-        <td>{{ user }}</td>
-        <td class="balance">{{ data['balance'] }}</td>
+  </thead>
+  <tbody>
+    {% for user in sorted_users %}
+    <tr>
+      <td>{{ user.username }}</td>
+      <td>{{ user.balance }}</td>
+      <td>{{ user.role }}</td>
+    </tr>
     {% endfor %}
+  </tbody>
 </table>

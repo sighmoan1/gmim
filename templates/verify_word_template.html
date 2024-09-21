@@ -1,23 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Verify Word</title>
-</head>
-<body>
-  <h1>Verify Word</h1>
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul class="flash-messages">
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
-  <form method="POST" action="{{ url_for('verify_word') }}">
-    <label for="word">Enter the word:</label>
-    <input type="text" id="word" name="word" required>
-    <input type="submit" value="Submit">
-  </form>
-</body>
-</html>
+{% extends 'base.html' %} {% block title %} Verify Word - GMIMCoin {% endblock
+%} {% block content %}
+<h1>Verify Word</h1>
+<form method="POST" action="{{ url_for('verify_word') }}">
+  <label for="word">Enter the word:</label>
+  <input
+    type="text"
+    id="word"
+    name="word"
+    required
+    maxlength="100"
+    placeholder="Enter the verification word"
+  />
+  <button type="submit">Submit</button>
+</form>
+<p><a href="{{ url_for('logout') }}">Logout</a></p>
+{% endblock %}
